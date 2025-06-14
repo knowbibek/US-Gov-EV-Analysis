@@ -1,64 +1,121 @@
-# US Government Electric Vehicle Spending Analysis
+# Electric Vehicle Registration Analysis
 
-This project performs an exploratory data analysis (EDA) on a dataset detailing US government spending, specifically focusing on the procurement and analysis of electric vehicles. The analysis aims to identify trends, distributions, and key insights regarding EV adoption within government fleets.
+This repository contains a Google Colab notebook that performs an end-to-end analysis of electric vehicle (EV) registration data. The primary objective is to explore trends, vehicle types, and adoption patterns in government or public-sector EV registrations. While the included dataset may be state-specific, the analysis framework is designed to be applied to **any similar dataset** across regions or states.
 
-## Technologies Used
+---
 
-*   Apache Spark (PySpark)
-*   Python
-*   Jupyter Notebook
-*   Pandas
-*   Matplotlib
-*   Graphviz
-*   Git & GitHub
+## 📁 Data
 
-## Setup and Installation
+The analysis is based on a dataset named `gov_spending.csv`, which contains details related to electric vehicle registrations. The dataset is expected to include the following columns (depending on source):
 
-This project was developed and run in a Google Colab environment. To replicate the analysis, you will need:
+- `Model Year`  
+- `Make`  
+- `City`, `County`, `State`  
+- `Electric Vehicle Type` (e.g., BEV, PHEV)  
+- `Electric Range`  
+- `Clean Fuel Eligibility`  
+- `Base MSRP` and more
 
-1.  A Google Account to access Google Colab.
-2.  The `gov_spending.csv` dataset. **[Specify how to obtain the dataset - e.g., "The dataset is included in this repository."]**
+> You can source this data from state transportation agencies or government open data portals. For example:  
+> https://catalog.data.gov/dataset/electric-vehicle-population-data
 
-The Jupyter notebook includes cells to install the necessary dependencies (Java, Spark, findspark) within the Colab environment using shell commands.
+---
 
-If running this project locally, you will need to:
+## ⚙️ Setup and Execution
 
-*   Install Java (OpenJDK 8 or later recommended).
-*   Download and set up Apache Spark.
-*   Install Python and the required libraries (`pyspark`, `findspark`, `pandas`, `matplotlib`, `graphviz`) using pip:
+1. Open the provided Google Colab notebook (e.g., `EV_Registration_Analysis.ipynb`).
+2. When prompted, upload the `gov_spending.csv` file.
+3. The notebook includes steps to install necessary libraries (`findspark`, `pyspark`, `graphviz`) and configure a Spark environment inside Colab.
+4. Run each cell sequentially to perform the analysis.
 
-*   Set the `JAVA_HOME` and `SPARK_HOME` environment variables to point to your Java and Spark installations respectively.
+---
 
-## Usage
+## 📊 Analysis Performed
 
-1.  Upload the `gov_spending.csv` file to your environment (e.g., to your Google Drive if using Colab, or place it in the same directory as the notebook if running locally).
-2.  Open the `[your_notebook_name].ipynb` file (replace with your actual filename, e.g., `US_Gov_EV_Analysis.ipynb`) in Jupyter Notebook or Google Colab.
-3.  Run the cells sequentially. The notebook performs the following steps:
-    *   Installs dependencies (if in environments like Colab).
-    *   Initializes a Spark session.
-    *   Loads and cleans the data.
-    *   Performs exploratory data analysis on various columns (Make, Model Year, City, Electric Vehicle Type, County).
-    *   Generates visualizations (specifically a bar chart for top makes).
-    *   Creates a data pipeline diagram.
+The notebook performs the following steps:
 
-## Data
+### ✅ Data Loading and Cleaning
 
-The analysis uses a dataset named `gov_spending.csv`. This file contains records related to US government spending on vehicles, including details such as Make, Model Year, City, County, Electric Vehicle Type, and more. **[Add any other relevant details about the data source or specific columns if needed.]**
+- Reads the uploaded CSV into a PySpark DataFrame
+- Cleans the data (e.g., drops missing or null values)
 
-## Analysis & Findings
+### 📈 Exploratory Data Analysis (EDA)
 
-The notebook performs analysis on several aspects of the data, including:
+- Counts and visualizes data by:
+  - `Make`
+  - `Model Year`
+  - `City`, `County`
+  - `Electric Vehicle Type` (BEV vs. PHEV)
+- Generates visualizations:
+  - Top EV brands (bar chart)
+  - Registrations by model year (line plot)
+  - EV type distribution (pie chart)
+  - Median electric range trend (line plot)
 
-*   Identifying the most common electric vehicle makes purchased by the government.
-*   Analyzing the distribution of vehicles by model year.
-*   Determining the cities and counties with the highest number of reported electric vehicles in the dataset.
-*   Categorizing the types of electric vehicles.
+### 🔮 Forecasting
 
-Key visualizations highlight the distribution of top vehicle makes, providing insights into the most commonly procured EV brands by the US government within the scope of this dataset.
+- Applies **Linear Regression** to project the following through 2027:
+  - Total EV registrations per year
+  - Median electric range
+  - BEV share among all electric vehicles
 
-## Project Structure / Pipeline
+---
 
-A visual representation of the data analysis pipeline, from raw data ingestion and cleaning to analysis and visualization, is generated within the notebook using Graphviz.
+## 📌 Key Visualizations and Outputs
 
+- Tables showing EV registration counts by category (Make, Year, Type, etc.)
+- Horizontal bar chart of top EV makes
+- Line charts showing time-based trends
+- Pie chart comparing BEV and PHEV distribution
+- Forecast charts with predicted values through 2027
 
-DataSe(gov_spending.csv): https://catalog.data.gov/dataset/electric-vehicle-population-data
+---
+
+### 🔢 BEV Share Forecast
+
+| Year   | Metric               | Value    |
+|--------|----------------------|----------|
+| 2024   | Actual BEV Share     | 0.906103 |
+| 2025   | Predicted BEV Share  | 0.923310 |
+| 2026   | Predicted BEV Share  | 0.940517 |
+| 2027   | Predicted BEV Share  | 0.958724 |
+
+- **Actual BEV Share**: Proportion of BEVs in the most recent complete year.
+- **Predicted BEV Share**: Linear regression forecasts for upcoming years.
+- Interpretation: BEVs are projected to dominate the electric vehicle landscape in coming years, phasing out PHEVs in government and fleet adoption.
+
+---
+
+## 📦 Dependencies
+
+These packages are automatically installed in the Colab environment:
+
+- `pyspark`  
+- `findspark`  
+- `pandas`  
+- `matplotlib`  
+- `graphviz`  
+- `scikit-learn`
+
+No setup is required beyond running the notebook in Colab. If using locally, install these packages via pip.
+
+---
+
+## 🧭 Workflow Diagram
+
+The following graph summarizes the analysis pipeline implemented in the notebook:
+
+```graphviz
+digraph {
+  rankdir="LR"
+  A [label="CSV File\n(gov_spending.csv)"]
+  B [label="Google Colab Notebook"]
+  C [label="PySpark DataFrame"]
+  D [label="Data Cleaning\n& Aggregation"]
+  E [label="Exploratory Analysis\n(EDA)"]
+  F [label="Visualizations\n(Matplotlib)"]
+  G [label="Forecast Models\n(Linear Regression)"]
+  H [label="Insights & Trends"]
+
+  A -> B -> C -> D -> E -> F -> G -> H
+}
